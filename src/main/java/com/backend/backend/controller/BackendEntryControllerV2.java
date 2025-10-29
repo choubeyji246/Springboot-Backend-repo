@@ -4,6 +4,8 @@ import com.backend.backend.entity.BackendEntry;
 import com.backend.backend.service.BackendEntryService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -32,8 +34,12 @@ public class BackendEntryControllerV2 {
     }
 
     @GetMapping("/id/{myId}")
-    public BackendEntry getEntryById(@PathVariable ObjectId myId){
-        return backendEntryService.getById(myId);
+    public ResponseEntity<BackendEntry> getEntryById(@PathVariable ObjectId myId){
+        BackendEntry backendEntry = backendEntryService.getById(myId);
+        if(backendEntry != null){
+            return new ResponseEntity<>(backendEntry, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/id/{myId}")
